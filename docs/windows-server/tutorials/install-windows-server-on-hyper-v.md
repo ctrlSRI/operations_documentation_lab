@@ -1,24 +1,86 @@
-## VM hardware configuration
+# Install Windows Server on Hyper-V
 
-The Windows Server VM was configured according to the available resources of the physical host system and the expected lab workload.
+## Purpose
 
-| Setting | Value |
-|---|---|
-| VM name | DC01-Test |
-| VM generation | Generation 1 |
-| Memory | 4 GB |
-| Virtual processors | 2 |
-| Virtual disk | 70 GB VHDX |
-| Network adapter | LAB-SWITCH |
-| Installation type | Windows Server 2022 Standard Evaluation with Desktop Experience |
+This tutorial describes how to create a Windows Server virtual machine in Hyper-V and install Windows Server 2022 Standard Evaluation.
 
-## Configuration notes
+The VM is used as the first server in a local Windows Server lab environment.
 
-The VM uses 4 GB of memory because Windows Server with Desktop Experience requires more resources than a minimal Server Core installation.
+## Prerequisites
 
-The virtual disk was configured with 70 GB to provide enough space for the operating system, updates, server roles, and later lab files.
+- Windows 11 Pro host system
+- Hyper-V enabled
+- Internet connection
+- Administrator permissions
+- Sufficient local disk space
+- Windows Server 2022 Evaluation ISO
 
-The VM was assigned 2 virtual processors in this lab setup.
-For basic Active Directory, DNS, and DHCP testing a configuration with 2 to 4 virtual processors is recommended.
+## Download the Windows Server ISO
 
-Generation 1 was used after the initial Generation 2 VM did not boot successfully with the available installation media and firmware configuration.
+Download the Windows Server 2022 Evaluation ISO from the official Microsoft Evaluation Center.
+
+In this lab, the following ISO was used:
+
+```text
+SERVER_EVAL_x64FRE_en-us.iso
+```
+
+## Important note about ISO files
+
+An ISO file must contain a bootable operating system installation image.
+During the lab setup, an incorrect ISO file was selected first:
+
+```text
+LOF Packages OEM
+```
+
+This file was not a bootable Windows Server installation medium.
+As a result, the virtual machine could not start the Windows Server installation.
+
+## VM configuration summary
+
+The VM was configured with 4 GB memory, 2 virtual processors, a 70 GB virtual hard disk, and the LAB-SWITCH internal network.
+
+The detailed VM hardware configuration is documented separately in:
+
+configure-vm-on-hyper-v.md
+
+## Procedure
+
+ 1. Open **Hyper-V Manager**
+ 2. Select the local Hyper-V host
+ 3. Create a new virtual machine.
+ 4. Enter the VM name DC01-Test.
+ 5. Select **Generation 1**.
+ 6. Assign 4 GB of memory.
+ 7. Connect the VM to the LAB-SWITCH virtual switch.
+ 8. Create a new virtual hard disk with 70 GB.
+ 9. Attach the Windows Server 2022 Evaluation ISO.
+10. Start the VM.
+11. Follow the Windows Server installation wizard.
+12. Select **Windows Server 2022 Standard Evaluation with Desktop Experience**.
+13. Complete the installation.
+
+## Expected result
+
+Windows Server 2022 Standard Evaluation is installed successfully as a Hyper-V virtual machine.
+
+The VM can be started and accessed through Hyper-V Manager.
+
+## Troubleshooting
+
+If the VM does not boot from the ISO, check the following:
+
+The ISO file is a bootable Windows Server installation image.
+The ISO is attached to the virtual DVD drive.
+The virtual DVD drive is included in the boot order.
+Secure Boot settings are compatible with the selected VM generation.
+The correct VM generation is used for the installation media.
+
+## Lessons learned
+
+Not every ISO file is a bootable operating system installation medium.
+
+For a lab environment, recreating a VM can be faster than spending too much time troubleshooting a broken initial configuration.
+
+Documenting failed attempts is useful because it explains why the final configuration was chosen.
